@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ConsoleView">
+        <attr name="debugLogColor" format="string"/>
+        <attr name="verboseLogColor" format="string"/>
+        <attr name="warningLogColor" format="string"/>
+        <attr name="errorLogColor" format="string"/>
+        <attr name="consoleIsLightTheme" format="boolean"/>
+    </declare-styleable>
+</resources>
