@@ -7,12 +7,14 @@ import android.support.v4.widget.NestedScrollView;
 import android.text.Html;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import android.util.TypedValue;
+import java.util.Locale;
+
 import android.graphics.Color;
 
 public class ConsoleView extends LinearLayout {
@@ -29,7 +31,7 @@ public class ConsoleView extends LinearLayout {
 
     // ScrollView
     private NestedScrollView mScrollView;
-    // ScrollView Child (add textviews here) (vertical)
+    // ScrollView Child
     private LinearLayout mContentView;
 
     public Context mContext;
@@ -83,23 +85,14 @@ public class ConsoleView extends LinearLayout {
         buttonParams.weight = 1.0f;
         mClearLogButton.setLayoutParams(buttonParams);
         mSaveLogButton.setLayoutParams(buttonParams);
-        mClearLogButton.setText("Clear Log");
-        mSaveLogButton.setText("Save Log");
+        mClearLogButton.setText(R.string.clearLog);
+        mSaveLogButton.setText(R.string.saveLog);
 
-        // TypedValue typedValue = new TypedValue();
+        mClearLogButton.setTextColor(Color.WHITE);
+        mSaveLogButton.setTextColor(Color.WHITE);
 
-        int textColor = Color.WHITE;
-
-		/*
-		if (context.getTheme().resolveAttribute(R.attr.colorAccent, typedValue, true)) {
-			textColor = typedValue.data;
-		} else {
-			textColor = Color.WHITE;
-		}
-		*/
-
-        mClearLogButton.setTextColor(textColor);
-        mSaveLogButton.setTextColor(textColor);
+        mClearLogButton.setOnClickListener(clearLogListener);
+        mSaveLogButton.setOnClickListener(saveLogListener);
 
         mScrollView = new NestedScrollView(mContext);
         NestedScrollView.LayoutParams scrollParams = new NestedScrollView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
@@ -129,6 +122,18 @@ public class ConsoleView extends LinearLayout {
 
     }
 
+    OnClickListener clearLogListener = new OnClickListener() {
+        public void onClick(View v) {
+            clearConsole();
+        }
+    };
+
+    OnClickListener saveLogListener = new OnClickListener() {
+        public void onClick(View v) {
+            writeToConsole("d", "Console", "Save Log Button Clicked");
+        }
+    };
+
     public void writeToConsole(String logLevel, String key, String message) {
         new WriteToConsoleLog(mContext, logLevel, key, message, mContentView, mIsLightTheme).execute();
     }
@@ -147,7 +152,7 @@ public class ConsoleView extends LinearLayout {
         TextView mtextview;
         boolean mlighttheme;
 
-        public WriteToConsoleLog(Context context, String logLevel, String key, String message, LinearLayout contentView, boolean lightTheme) {
+        WriteToConsoleLog(Context context, String logLevel, String key, String message, LinearLayout contentView, boolean lightTheme) {
             mcontext = context;
             mloglevel = logLevel;
             mkey = key;
@@ -223,15 +228,11 @@ public class ConsoleView extends LinearLayout {
 
             // Get the time
             Calendar c = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat("h:mm:ss a");
+            SimpleDateFormat sdf = new SimpleDateFormat("h:mm:ss a", Locale.US);
 
             String time = sdf.format(c.getTime());
 
-            // Create new info
-            String debugInfo = "<font color='" + levelColor + "'> " + time + " " + mloglevel.toUpperCase() + ": " + mkey + "     -     " + "</font>" + mmessage;
-
-
-            return debugInfo;
+            return "<font color='" + levelColor + "'> " + time + " " + mloglevel.toUpperCase() + ": " + mkey + "     -     " + "</font>" + mmessage;
         } // doInBackground
 
         protected void onProgressUpdate(String... progress) {
