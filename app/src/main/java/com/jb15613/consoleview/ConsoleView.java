@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -142,14 +143,16 @@ public class ConsoleView extends LinearLayout {
         mContentView.removeAllViews();
     }
 
-    public class WriteToConsoleLog extends AsyncTask<String, String, String> {
+    public class WriteToConsoleLog extends AsyncTask<String, String, ArrayList<String>> {
 
         Context mcontext;
         String mloglevel;
         String mkey;
         String mmessage;
         LinearLayout mcontentview;
-        TextView mtextview;
+        LinearLayout mtextcontainer;
+        TextView mtextviewL;
+        TextView mtextviewR;
         boolean mlighttheme;
         int shadowColor;
 
@@ -167,21 +170,31 @@ public class ConsoleView extends LinearLayout {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            mtextview = new TextView(mcontext);
+            mtextcontainer = new LinearLayout(mcontext);
+            LinearLayout.LayoutParams textContainerParams =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+            mtextcontainer.setLayoutParams(textContainerParams);
+            mtextcontainer.setOrientation(LinearLayout.HORIZONTAL);
+
+            mtextviewL = new TextView(mcontext);
+            mtextviewR = new TextView(mcontext);
             LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            mtextview.setLayoutParams(textParams);
-            mtextview.setPadding(8, 4, 8, 4);
+            mtextviewL.setLayoutParams(textParams);
+            mtextviewL.setPadding(8, 4, 8, 0);
+            mtextviewR.setLayoutParams(textParams);
+            mtextviewL.setPadding(0, 4, 8, 4);
 
             if (mlighttheme) {
-                mtextview.setTextColor(0xff000000);
+                mtextviewL.setTextColor(0xff000000);
+                mtextviewR.setTextColor(0xff000000);
             } else {
-                mtextview.setTextColor(0xffffffff);
+                mtextviewL.setTextColor(0xffffffff);
+                mtextviewR.setTextColor(0xffffffff);
             }
 
         } // onPreExecute
 
         @Override
-        protected String doInBackground(String... aurl) {
+        protected ArrayList<String> doInBackground(String... aurl) {
 
             String levelColor = "";
 
@@ -244,21 +257,31 @@ public class ConsoleView extends LinearLayout {
 
             String time = sdf.format(c.getTime());
 
-            return "<font color='" + levelColor + "'> " + time + " " + mloglevel.toUpperCase() + ": " + mkey + "     -     " + "</font>" + mmessage;
+            ArrayList<String> items = new ArrayList<>();
+            items.add("<font color='" + levelColor + "'> " + time + " " + mloglevel.toUpperCase() + ": " + mkey + "     -     " + "</font>");
+            items.add(mmessage);
+
+            return items;
         } // doInBackground
 
         protected void onProgressUpdate(String... progress) {
         } // onProgressUpdate
 
         @Override
-        protected void onPostExecute(String info) {
+        protected void onPostExecute(ArrayList<String> info) {
 
-            mtextview.setTextSize(12);
+            mtextviewL.setTextSize(12);
+            mtextviewR.setTextSize(12);
+
             if (shadowColor != 0) {
-                mtextview.setShadowLayer(2, 3, 3, shadowColor);
+                mtextviewR.setShadowLayer(2, 3, 3, shadowColor);
             }
-            mtextview.setText(Html.fromHtml(info), TextView.BufferType.SPANNABLE);
-            mcontentview.addView(mtextview);
+            mtextviewL.setText(Html.fromHtml(info.get(1)), TextView.BufferType.SPANNABLE);
+            mtextviewR.setText(info.get(2));
+
+            mtextcontainer.addView(mtextviewL);
+            mtextcontainer.addView(mtextviewR);
+            mcontentview.addView(mtextcontainer);
 
         } // onPostExecute
 
