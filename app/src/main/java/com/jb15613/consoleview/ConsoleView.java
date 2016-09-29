@@ -201,10 +201,12 @@ public class ConsoleView extends LinearLayout {
 
             if ((mtextcolor != null) && (!mtextcolor.equals(""))) {
 
-                mtextviewL.setTextColor(Color.parseColor(mtextcolor));
+                writeToConsole("d", "mtextcolor", "not null && not blank: " + mtextcolor);
+                mtextviewR.setTextColor(Color.parseColor(mtextcolor));
 
             } else {
 
+                writeToConsole("d", "mtextcolor", "null or blank");
                 if (mlighttheme) {
                     mtextviewL.setTextColor(0xff404040);
                     mtextviewR.setTextColor(0xff404040);
