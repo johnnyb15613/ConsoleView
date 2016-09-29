@@ -276,8 +276,8 @@ public class ConsoleView extends LinearLayout {
             if (shadowColor != 0) {
                 mtextviewR.setShadowLayer(2, 3, 3, shadowColor);
             }
-            mtextviewL.setText(Html.fromHtml(info.get(1)), TextView.BufferType.SPANNABLE);
-            mtextviewR.setText(info.get(2));
+            mtextviewL.setText(Html.fromHtml(info.get(0)), TextView.BufferType.SPANNABLE);
+            mtextviewR.setText(info.get(1));
 
             mtextcontainer.addView(mtextviewL);
             mtextcontainer.addView(mtextviewR);
