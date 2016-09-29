@@ -222,7 +222,16 @@ public class ConsoleView extends LinearLayout {
                 case "v":
 
                     if (mVerboseColor != null) {
-                        levelColor = mVerboseColor;
+                        if (mVerboseColor.length() > 7) {
+                            // alpha present, strip it for string
+                            levelColor = "#" + mVerboseColor.substring(3);
+                            shadowColor = Color.parseColor(mVerboseColor);
+                        } else {
+                            // no alpha present, add it for color
+                            levelColor = mVerboseColor;
+                            String newColor = "#ff" + mVerboseColor.substring(1);
+                            shadowColor = Color.parseColor(newColor);
+                        }
                     } else {
                         levelColor = "#00ff00";
                     }
@@ -232,7 +241,16 @@ public class ConsoleView extends LinearLayout {
                 case "w":
 
                     if (mWarningColor != null) {
-                        levelColor = mWarningColor;
+                        if (mWarningColor.length() > 7) {
+                            // alpha present, strip it for string
+                            levelColor = "#" + mWarningColor.substring(3);
+                            shadowColor = Color.parseColor(mWarningColor);
+                        } else {
+                            // no alpha present, add it for color
+                            levelColor = mWarningColor;
+                            String newColor = "#ff" + mWarningColor.substring(1);
+                            shadowColor = Color.parseColor(newColor);
+                        }
                     } else {
                         levelColor = "#ffff00";
                     }
@@ -242,7 +260,16 @@ public class ConsoleView extends LinearLayout {
                 case "e":
 
                     if (mErrorColor != null) {
-                        levelColor = mErrorColor;
+                        if (mErrorColor.length() > 7) {
+                            // alpha present, strip it for string
+                            levelColor = "#" + mErrorColor.substring(3);
+                            shadowColor = Color.parseColor(mErrorColor);
+                        } else {
+                            // no alpha present, add it for color
+                            levelColor = mErrorColor;
+                            String newColor = "#ff" + mErrorColor.substring(1);
+                            shadowColor = Color.parseColor(newColor);
+                        }
                     } else {
                         levelColor = "#ff0000";
                     }
