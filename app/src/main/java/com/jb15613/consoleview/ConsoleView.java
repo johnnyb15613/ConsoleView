@@ -41,6 +41,8 @@ public class ConsoleView extends LinearLayout {
     String mDebugColor;
     String mWarningColor;
     String mErrorColor;
+    String mTextColor;
+    String mBackgroundColor;
     boolean mIsLightTheme;
 
     public ConsoleView(Context context) {
@@ -64,6 +66,8 @@ public class ConsoleView extends LinearLayout {
             mVerboseColor = ta.getString(R.styleable.ConsoleView_verboseLogColor);
             mWarningColor = ta.getString(R.styleable.ConsoleView_warningLogColor);
             mErrorColor = ta.getString(R.styleable.ConsoleView_errorLogColor);
+            mTextColor = ta.getString(R.styleable.ConsoleView_consoleTextColor);
+            mBackgroundColor = ta.getString(R.styleable.ConsoleView_consoleBackgroundColor);
             mIsLightTheme = ta.getBoolean(R.styleable.ConsoleView_consoleIsLightTheme, false);
         } finally {
             ta.recycle();
@@ -113,10 +117,20 @@ public class ConsoleView extends LinearLayout {
         mContainer.addView(mButtonContainer);
         mContainer.addView(mScrollView);
 
-        if (mIsLightTheme) {
-            mContainer.setBackgroundColor(0xffffffff);
+        if (mBackgroundColor != null) {
+
+            mContainer.setBackgroundColor(Color.parseColor(mBackgroundColor));
+            writeToConsole("d", "mBackgroundColor", "not null: " + mBackgroundColor);
+
         } else {
-            mContainer.setBackgroundColor(0xff101010);
+
+            writeToConsole("d", "mBackgroundColor", "null");
+            if (mIsLightTheme) {
+                mContainer.setBackgroundColor(0xffffffff);
+            } else {
+                mContainer.setBackgroundColor(0xff000000);
+            }
+
         }
 
         this.addView(mContainer);
@@ -136,7 +150,7 @@ public class ConsoleView extends LinearLayout {
     };
 
     public void writeToConsole(String logLevel, String key, String message) {
-        new WriteToConsoleLog(mContext, logLevel, key, message, mContentView, mIsLightTheme).execute();
+        new WriteToConsoleLog(mContext, logLevel, key, message, mContentView, mIsLightTheme, mTextColor).execute();
     }
 
     public void clearConsole() {
@@ -155,8 +169,9 @@ public class ConsoleView extends LinearLayout {
         TextView mtextviewR;
         boolean mlighttheme;
         int shadowColor;
+        String mtextcolor;
 
-        WriteToConsoleLog(Context context, String logLevel, String key, String message, LinearLayout contentView, boolean lightTheme) {
+        WriteToConsoleLog(Context context, String logLevel, String key, String message, LinearLayout contentView, boolean lightTheme, String textColor) {
             mcontext = context;
             mloglevel = logLevel;
             mkey = key;
@@ -164,6 +179,7 @@ public class ConsoleView extends LinearLayout {
             mcontentview = contentView;
             mlighttheme = lightTheme;
             shadowColor = 0;
+            mtextcolor = textColor;
         } // constructor
 
         @Override
@@ -183,12 +199,22 @@ public class ConsoleView extends LinearLayout {
             mtextviewR.setLayoutParams(textParams);
             mtextviewL.setPadding(0, 4, 8, 4);
 
-            if (mlighttheme) {
-                mtextviewL.setTextColor(0xff000000);
-                mtextviewR.setTextColor(0xff000000);
+            if ((mtextcolor != null) && (!mtextcolor.equals(""))) {
+
+                writeToConsole("d", "mtextcolor", "not null && not blank: " + mtextcolor);
+                mtextviewL.setTextColor(Color.parseColor(mtextcolor));
+
             } else {
-                mtextviewL.setTextColor(0xffffffff);
-                mtextviewR.setTextColor(0xffffffff);
+
+                writeToConsole("d", "mtextcolor", "null or blank");
+                if (mlighttheme) {
+                    mtextviewL.setTextColor(0xff404040);
+                    mtextviewR.setTextColor(0xff404040);
+                } else {
+                    mtextviewL.setTextColor(0xffffffff);
+                    mtextviewR.setTextColor(0xffffffff);
+                }
+
             }
 
         } // onPreExecute
