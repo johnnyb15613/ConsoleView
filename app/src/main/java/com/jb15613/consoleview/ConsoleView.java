@@ -77,6 +77,7 @@ public class ConsoleView extends LinearLayout {
         LinearLayout.LayoutParams containerParams =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         mContainer.setLayoutParams(containerParams);
         mContainer.setOrientation(LinearLayout.VERTICAL);
+		mContainer.setPadding(8, 8, 8, 8);
 
         mButtonContainer = new LinearLayout(mContext);
         LinearLayout.LayoutParams buttonContainerParams =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
