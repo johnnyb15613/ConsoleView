@@ -285,8 +285,8 @@ public class ConsoleView extends LinearLayout {
             String time = sdf.format(c.getTime());
 
             ArrayList<String> items = new ArrayList<>();
-            items.add("<font color='" + levelColor + "'> " + time + " " + mloglevel.toUpperCase() + ": " + mkey + "     -     " + "</font>");
-            items.add(mmessage);
+            items.add("<font color='" +  levelColor + "'> " + mloglevel.toUpperCase() + ": " + time + "</font>");
+            items.add(mkey + " - " + mmessage);
 
             return items;
         } // doInBackground
