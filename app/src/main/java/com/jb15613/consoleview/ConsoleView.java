@@ -120,11 +120,9 @@ public class ConsoleView extends LinearLayout {
         if (mBackgroundColor != null) {
 
             mContainer.setBackgroundColor(Color.parseColor(mBackgroundColor));
-            writeToConsole("d", "mBackgroundColor", "not null: " + mBackgroundColor);
 
         } else {
 
-            writeToConsole("d", "mBackgroundColor", "null");
             if (mIsLightTheme) {
                 mContainer.setBackgroundColor(0xffffffff);
             } else {
@@ -201,12 +199,10 @@ public class ConsoleView extends LinearLayout {
 
             if ((mtextcolor != null) && (!mtextcolor.equals(""))) {
 
-                writeToConsole("d", "mtextcolor", "not null && not blank: " + mtextcolor);
                 mtextviewR.setTextColor(Color.parseColor(mtextcolor));
 
             } else {
 
-                writeToConsole("d", "mtextcolor", "null or blank");
                 if (mlighttheme) {
                     mtextviewL.setTextColor(0xff404040);
                     mtextviewR.setTextColor(0xff404040);
