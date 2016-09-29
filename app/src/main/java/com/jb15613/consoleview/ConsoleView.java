@@ -151,6 +151,7 @@ public class ConsoleView extends LinearLayout {
         LinearLayout mcontentview;
         TextView mtextview;
         boolean mlighttheme;
+        int shadowColor;
 
         WriteToConsoleLog(Context context, String logLevel, String key, String message, LinearLayout contentView, boolean lightTheme) {
             mcontext = context;
@@ -159,6 +160,7 @@ public class ConsoleView extends LinearLayout {
             mmessage = message;
             mcontentview = contentView;
             mlighttheme = lightTheme;
+            shadowColor = 0;
         } // constructor
 
         @Override
@@ -187,7 +189,17 @@ public class ConsoleView extends LinearLayout {
                 case "d":
 
                     if (mDebugColor != null) {
-                        levelColor = mDebugColor;
+                        if (mDebugColor.length() > 7) {
+                            // alpha present, strip it for string
+                            levelColor = "#" + mDebugColor.substring(3);
+                            shadowColor = Color.parseColor(mDebugColor);
+                        } else {
+                            // no alpha present, add it for color
+                            levelColor = mDebugColor;
+                            String newColor = "#ff" + mDebugColor.substring(1);
+                            shadowColor = Color.parseColor(newColor);
+                        }
+
                     } else {
                         levelColor = "#0000ff";
                     }
@@ -242,6 +254,9 @@ public class ConsoleView extends LinearLayout {
         protected void onPostExecute(String info) {
 
             mtextview.setTextSize(12);
+            if (shadowColor != 0) {
+                mtextview.setShadowLayer(2, 3, 3, shadowColor);
+            }
             mtextview.setText(Html.fromHtml(info), TextView.BufferType.SPANNABLE);
             mcontentview.addView(mtextview);
 
