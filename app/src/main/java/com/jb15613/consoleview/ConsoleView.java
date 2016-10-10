@@ -37,6 +37,9 @@ public class ConsoleView extends LinearLayout {
 
     public Context mContext;
 
+	String mClassColor;
+	String mMethodColor;
+	String mInfoColor;
     String mVerboseColor;
     String mDebugColor;
     String mWarningColor;
@@ -62,6 +65,9 @@ public class ConsoleView extends LinearLayout {
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.ConsoleView, 0, 0);
         try {
+			mClassColor = ta.getString(R.styleable.ConsoleView_classLogColor);
+			mMethodColor = ta.getString(R.styleable.ConsoleView_methodLogColor);
+			mInfoColor = ta.getString(R.styleable.ConsoleView_infoLogColor);
             mDebugColor = ta.getString(R.styleable.ConsoleView_debugLogColor);
             mVerboseColor = ta.getString(R.styleable.ConsoleView_verboseLogColor);
             mWarningColor = ta.getString(R.styleable.ConsoleView_warningLogColor);
@@ -151,6 +157,10 @@ public class ConsoleView extends LinearLayout {
     public void writeToConsole(String logLevel, String key, String message) {
         new WriteToConsoleLog(mContext, logLevel, key, message, mContentView, mIsLightTheme, mTextColor).execute();
     }
+	
+	public void writeToConsole(String logLevel, String className, String methodName, String key, String message) {
+		new WriteToConsoleLog(mContext, logLevel, className, methodName, key, message, mContentView, mIsLightTheme, mTextColor).execute();
+	}
 
     public void clearConsole() {
         mContentView.removeAllViews();
@@ -160,11 +170,15 @@ public class ConsoleView extends LinearLayout {
 
         Context mcontext;
         String mloglevel;
+		String mclassname;
+		String mmethodname;
         String mkey;
         String mmessage;
         LinearLayout mcontentview;
         LinearLayout mtextcontainer;
         TextView mtextviewL;
+		TextView mtextviewL2;
+		TextView mtextviewL3;
         TextView mtextviewR;
         boolean mlighttheme;
         int shadowColor;
@@ -173,6 +187,19 @@ public class ConsoleView extends LinearLayout {
         WriteToConsoleLog(Context context, String logLevel, String key, String message, LinearLayout contentView, boolean lightTheme, String textColor) {
             mcontext = context;
             mloglevel = logLevel;
+            mkey = key;
+            mmessage = message;
+            mcontentview = contentView;
+            mlighttheme = lightTheme;
+            shadowColor = 0;
+            mtextcolor = textColor;
+        } // constructor
+		
+		WriteToConsoleLog(Context context, String logLevel, String className, String methodName, String key, String message, LinearLayout contentView, boolean lightTheme, String textColor) {
+            mcontext = context;
+            mloglevel = logLevel;
+			mclassname = className;
+			mmethodname = methodName;
             mkey = key;
             mmessage = message;
             mcontentview = contentView;
@@ -189,30 +216,68 @@ public class ConsoleView extends LinearLayout {
             LinearLayout.LayoutParams textContainerParams =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
             mtextcontainer.setLayoutParams(textContainerParams);
             mtextcontainer.setOrientation(LinearLayout.HORIZONTAL);
+			
+			if ((mclassname == null) && (mmethodname == null)) {
+				// if these are both null
+				
+				mtextviewL = new TextView(mcontext);
+				mtextviewR = new TextView(mcontext);
+				LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				mtextviewL.setLayoutParams(textParams);
+				mtextviewL.setPadding(8, 4, 8, 0);
+				mtextviewR.setLayoutParams(textParams);
+				mtextviewL.setPadding(0, 4, 8, 4);
 
-            mtextviewL = new TextView(mcontext);
-            mtextviewR = new TextView(mcontext);
-            LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            mtextviewL.setLayoutParams(textParams);
-            mtextviewL.setPadding(8, 4, 8, 0);
-            mtextviewR.setLayoutParams(textParams);
-            mtextviewL.setPadding(0, 4, 8, 4);
+			} else {
+				
+				mtextviewL = new TextView(mcontext);
+				mtextviewL2 = new TextView(mcontext);
+				mtextviewL3 = new TextView(mcontext);
+				mtextviewR = new TextView(mcontext);
+				
+				LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				
+				mtextviewL.setLayoutParams(textParams);
+				mtextviewL.setPadding(8, 4, 8, 0);
+				
+				mtextviewL2.setLayoutParams(textParams);
+				mtextviewL2.setPadding(0, 4, 8, 0);
+				
+				mtextviewL3.setLayoutParams(textParams);
+				mtextviewL3.setPadding(0, 4, 8, 0);
+				
+				mtextviewR.setLayoutParams(textParams);
+				mtextviewL.setPadding(0, 4, 8, 4);
+				
+			}
+			
+			if ((mtextcolor != null) && (!mtextcolor.equals(""))) {
 
-            if ((mtextcolor != null) && (!mtextcolor.equals(""))) {
+				mtextviewR.setTextColor(Color.parseColor(mtextcolor));
 
-                mtextviewR.setTextColor(Color.parseColor(mtextcolor));
+			} else {
 
-            } else {
+				if (mlighttheme) {
+					mtextviewL.setTextColor(0xff404040);
+					mtextviewR.setTextColor(0xff404040);
+					
+					if ((mclassname != null) && (mmethodname != null)) {
+						mtextviewL2.setTextColor(0xff404040);
+						mtextviewL3.setTextColor(0xff404040);
+					}
+					
+				} else {
+					mtextviewL.setTextColor(0xffffffff);
+					mtextviewR.setTextColor(0xffffffff);
+					
+					if ((mclassname != null) && (mmethodname != null)) {
+						mtextviewL2.setTextColor(0xffffffff);
+						mtextviewL3.setTextColor(0xffffffff);
+					}
+					
+				}
 
-                if (mlighttheme) {
-                    mtextviewL.setTextColor(0xff404040);
-                    mtextviewR.setTextColor(0xff404040);
-                } else {
-                    mtextviewL.setTextColor(0xffffffff);
-                    mtextviewR.setTextColor(0xffffffff);
-                }
-
-            }
+			}
 
         } // onPreExecute
 
@@ -220,6 +285,8 @@ public class ConsoleView extends LinearLayout {
         protected ArrayList<String> doInBackground(String... aurl) {
 
             String levelColor = "";
+			String classColor = "";
+			String methodColor = "";
 
             switch (mloglevel) {
                 case "d":
@@ -298,8 +365,51 @@ public class ConsoleView extends LinearLayout {
                     }
 
                     break;
+					
+				case "i":
+					
+					if (mInfoColor != null) {
+						if (mInfoColor.length() > 7) {
+                            // alpha present, strip it for string
+                            levelColor = "#" + mInfoColor.substring(3);
+                            shadowColor = Color.parseColor(mInfoColor);
+                        } else {
+                            // no alpha present, add it for color
+                            levelColor = mInfoColor;
+                            String newColor = "#ff" + mInfoColor.substring(1);
+                            shadowColor = Color.parseColor(newColor);
+                        }
+                    } else {
+                        levelColor = "#aaaaaa";
+                    }
+					
+					break;
 
             }
+			
+			if (mClassColor != null) {
+				if (mClassColor.length() > 7) {
+					// alpha present, strip it for string
+					classColor = "#" + mClassColor.substring(3);
+				} else {
+					// no alpha present
+					classColor = mClassColor;
+				}
+			} else {
+				classColor = "#0060ff";
+			}
+			
+			if (mMethodColor != null) {
+				if (mMethodColor.length() > 7) {
+					// alpha present, strip it for string
+					methodColor = "#" + mMethodColor.substring(3);
+				} else {
+					// no alpha present
+					methodColor = mMethodColor;
+				}
+			} else {
+				methodColor = "#ff6000";
+			}
 
             // Get the time
             Calendar c = Calendar.getInstance();
@@ -309,7 +419,13 @@ public class ConsoleView extends LinearLayout {
 
             ArrayList<String> items = new ArrayList<>();
             items.add("<font color='" +  levelColor + "'> " + mloglevel.toUpperCase() + ": " + time + "</font>");
+			
             items.add(mkey + " - " + mmessage);
+			
+			if ((mclassname != null) && (mmethodname != null)) {
+				items.add("<font color='" +  classColor + "'> " + mclassname + ".</font>");
+				items.add("<font color='" +  methodColor + "'> " + mmethodname + "</font>");
+			}
 
             return items;
         } // doInBackground
@@ -322,14 +438,30 @@ public class ConsoleView extends LinearLayout {
 
             mtextviewL.setTextSize(12);
             mtextviewR.setTextSize(12);
+			
+			if ((mclassname != null) && (mmethodname != null)) {
+				mtextviewL2.setTextSize(12);
+				mtextviewL3.setTextSize(12);
+			}
 
             if (shadowColor != 0) {
                 mtextviewR.setShadowLayer(2, 2, 2, shadowColor);
             }
             mtextviewL.setText(Html.fromHtml(info.get(0)), TextView.BufferType.SPANNABLE);
             mtextviewR.setText(info.get(1));
+			
+			if ((mclassname != null) && (mmethodname != null)) {
+				mtextviewL2.setText(Html.fromHtml(info.get(2)), TextView.BufferType.SPANNABLE);
+				mtextviewL3.setText(Html.fromHtml(info.get(3)), TextView.BufferType.SPANNABLE);
+			}
 
             mtextcontainer.addView(mtextviewL);
+			
+			if ((mclassname != null) && (mmethodname != null)) {
+				mtextcontainer.addView(mtextviewL2);
+				mtextcontainer.addView(mtextviewL3);
+			}
+			
             mtextcontainer.addView(mtextviewR);
             mcontentview.addView(mtextcontainer);
 
