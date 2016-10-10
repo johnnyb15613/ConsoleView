@@ -169,19 +169,28 @@ public class ConsoleView extends LinearLayout {
     public class WriteToConsoleLog extends AsyncTask<String, String, ArrayList<String>> {
 
         Context mcontext;
+		
         String mloglevel;
 		String mclassname;
 		String mmethodname;
         String mkey;
         String mmessage;
+		
         LinearLayout mcontentview;
-        LinearLayout mtextcontainer;
-        TextView mtextviewL;
-		TextView mtextviewL2;
-		TextView mtextviewL3;
-        TextView mtextviewR;
+        LinearLayout mtextparentcontainer;
+		LinearLayout mtexttopcontainer;
+		LinearLayout mtextbottomcontainer;
+		
+        TextView mtextviewTime;
+		TextView mtextviewClass;
+		TextView mtextviewMethod;
+        TextView mtextviewInfo;
+		
         boolean mlighttheme;
+		boolean mdeeplogging;
+		
         int shadowColor;
+		
         String mtextcolor;
 
         WriteToConsoleLog(Context context, String logLevel, String key, String message, LinearLayout contentView, boolean lightTheme, String textColor) {
@@ -211,78 +220,95 @@ public class ConsoleView extends LinearLayout {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-            mtextcontainer = new LinearLayout(mcontext);
-            LinearLayout.LayoutParams textContainerParams =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-            mtextcontainer.setLayoutParams(textContainerParams);
-            mtextcontainer.setOrientation(LinearLayout.HORIZONTAL);
 			
 			if ((mclassname == null) && (mmethodname == null)) {
-				// if these are both null
-				
-				mtextviewL = new TextView(mcontext);
-				mtextviewR = new TextView(mcontext);
-				LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-				mtextviewL.setLayoutParams(textParams);
-				mtextviewL.setPadding(8, 4, 8, 0);
-				mtextviewR.setLayoutParams(textParams);
-				mtextviewL.setPadding(0, 4, 8, 4);
+				mdeeplogging = false;
+			} else {
+				mdeeplogging = true;
+			}
+			
+        } // onPreExecute
 
+        @Override
+        protected ArrayList<String> doInBackground(String... aurl) {
+			
+			LinearLayout.LayoutParams containerParams =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+			LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			
+			mtextparentcontainer = new LinearLayout(mcontext);
+            mtextparentcontainer.setLayoutParams(containerParams);
+            mtextparentcontainer.setOrientation(LinearLayout.VERTICAL);
+			
+			if (!mdeeplogging) {
+				
+				mtexttopcontainer = new LinearLayout(mcontext);
+				mtexttopcontainer.setLayoutParams(containerParams);
+				mtexttopcontainer.setOrientation(LinearLayout.HORIZONTAL);
+				
+				mtextviewTime = new TextView(mcontext);
+				mtextviewInfo = new TextView(mcontext);
+				
+				mtextviewTime.setLayoutParams(textParams);
+				mtextviewTime.setPadding(8, 4, 0, 4);
+				mtextviewInfo.setLayoutParams(textParams);
+				mtextviewInfo.setPadding(0, 4, 8, 4);
+				
 			} else {
 				
-				mtextviewL = new TextView(mcontext);
-				mtextviewL2 = new TextView(mcontext);
-				mtextviewL3 = new TextView(mcontext);
-				mtextviewR = new TextView(mcontext);
+				mtexttopcontainer = new LinearLayout(mcontext);
+				mtexttopcontainer.setLayoutParams(containerParams);
+				mtexttopcontainer.setOrientation(LinearLayout.HORIZONTAL);
 				
-				LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+				mtextbottomcontainer = new LinearLayout(mcontext);
+				mtextbottomcontainer.setLayoutParams(containerParams);
+				mtextbottomcontainer.setOrientation(LinearLayout.HORIZONTAL);
 				
-				mtextviewL.setLayoutParams(textParams);
-				mtextviewL.setPadding(8, 4, 8, 0);
-				
-				mtextviewL2.setLayoutParams(textParams);
-				mtextviewL2.setPadding(0, 4, 8, 0);
-				
-				mtextviewL3.setLayoutParams(textParams);
-				mtextviewL3.setPadding(0, 4, 8, 0);
-				
-				mtextviewR.setLayoutParams(textParams);
-				mtextviewL.setPadding(0, 4, 8, 4);
+				mtextviewTime = new TextView(mcontext);
+				mtextviewClass = new TextView(mcontext);
+				mtextviewMethod = new TextView(mcontext);
+				mtextviewInfo = new TextView(mcontext);
+
+				mtextviewTime.setLayoutParams(textParams);
+				mtextviewTime.setPadding(8, 4, 0, 4);
+
+				mtextviewClass.setLayoutParams(textParams);
+				mtextviewClass.setPadding(0, 4, 0, 4);
+
+				mtextviewMethod.setLayoutParams(textParams);
+				mtextviewMethod.setPadding(0, 4, 0, 4);
+
+				mtextviewInfo.setLayoutParams(textParams);
+				mtextviewInfo.setPadding(0, 4, 8, 4);
 				
 			}
 			
 			if ((mtextcolor != null) && (!mtextcolor.equals(""))) {
 
-				mtextviewR.setTextColor(Color.parseColor(mtextcolor));
+				mtextviewInfo.setTextColor(Color.parseColor(mtextcolor));
 
 			} else {
 
 				if (mlighttheme) {
-					mtextviewL.setTextColor(0xff404040);
-					mtextviewR.setTextColor(0xff404040);
-					
-					if ((mclassname != null) && (mmethodname != null)) {
-						mtextviewL2.setTextColor(0xff404040);
-						mtextviewL3.setTextColor(0xff404040);
+					mtextviewTime.setTextColor(0xff404040);
+					mtextviewInfo.setTextColor(0xff404040);
+
+					if (mdeeplogging) {
+						mtextviewClass.setTextColor(0xff404040);
+						mtextviewMethod.setTextColor(0xff404040);
 					}
-					
+
 				} else {
-					mtextviewL.setTextColor(0xffffffff);
-					mtextviewR.setTextColor(0xffffffff);
-					
-					if ((mclassname != null) && (mmethodname != null)) {
-						mtextviewL2.setTextColor(0xffffffff);
-						mtextviewL3.setTextColor(0xffffffff);
+					mtextviewTime.setTextColor(0xffffffff);
+					mtextviewInfo.setTextColor(0xffffffff);
+
+					if (mdeeplogging) {
+						mtextviewClass.setTextColor(0xffffffff);
+						mtextviewMethod.setTextColor(0xffffffff);
 					}
-					
+
 				}
 
 			}
-
-        } // onPreExecute
-
-        @Override
-        protected ArrayList<String> doInBackground(String... aurl) {
 
             String levelColor = "";
 			String classColor = "";
@@ -422,7 +448,7 @@ public class ConsoleView extends LinearLayout {
 			
             items.add(mkey + " - " + mmessage);
 			
-			if ((mclassname != null) && (mmethodname != null)) {
+			if (mdeeplogging) {
 				items.add("<font color='" +  classColor + "'> " + mclassname + ".</font>");
 				items.add("<font color='" +  methodColor + "'> " + mmethodname + "</font>");
 			}
@@ -436,36 +462,48 @@ public class ConsoleView extends LinearLayout {
         @Override
         protected void onPostExecute(ArrayList<String> info) {
 			
-			if ((mclassname != null) && (mmethodname != null)) {
-				mtextviewL.setTextSize(10);
-				mtextviewR.setTextSize(10);
-				mtextviewL2.setTextSize(8);
-				mtextviewL3.setTextSize(8);
+			if (mdeeplogging) {
+				mtextviewTime.setTextSize(10);
+				mtextviewInfo.setTextSize(10);
+				mtextviewClass.setTextSize(8);
+				mtextviewMethod.setTextSize(8);
 			} else {
-				mtextviewL.setTextSize(12);
-				mtextviewR.setTextSize(12);
+				mtextviewTime.setTextSize(10);
+				mtextviewInfo.setTextSize(12);
 			}
 
             if (shadowColor != 0) {
-                mtextviewR.setShadowLayer(2, 2, 2, shadowColor);
+                mtextviewInfo.setShadowLayer(2, 2, 2, shadowColor);
             }
-            mtextviewL.setText(Html.fromHtml(info.get(0)), TextView.BufferType.SPANNABLE);
-            mtextviewR.setText(info.get(1));
+            mtextviewTime.setText(Html.fromHtml(info.get(0)), TextView.BufferType.SPANNABLE);
+            mtextviewInfo.setText(info.get(1));
 			
-			if ((mclassname != null) && (mmethodname != null)) {
-				mtextviewL2.setText(Html.fromHtml(info.get(2)), TextView.BufferType.SPANNABLE);
-				mtextviewL3.setText(Html.fromHtml(info.get(3)), TextView.BufferType.SPANNABLE);
-			}
-
-            mtextcontainer.addView(mtextviewL);
-			
-			if ((mclassname != null) && (mmethodname != null)) {
-				mtextcontainer.addView(mtextviewL2);
-				mtextcontainer.addView(mtextviewL3);
+			if (mdeeplogging) {
+				mtextviewClass.setText(Html.fromHtml(info.get(2)), TextView.BufferType.SPANNABLE);
+				mtextviewMethod.setText(Html.fromHtml(info.get(3)), TextView.BufferType.SPANNABLE);
 			}
 			
-            mtextcontainer.addView(mtextviewR);
-            mcontentview.addView(mtextcontainer);
+			if (mdeeplogging) {
+				
+				mtexttopcontainer.addView(mtextviewTime);
+				mtexttopcontainer.addView(mtextviewClass);
+				mtexttopcontainer.addView(mtextviewMethod);
+				
+				mtextparentcontainer.addView(mtexttopcontainer);
+				
+				mtextbottomcontainer.addView(mtextviewInfo);
+				
+				mtextparentcontainer.addView(mtextbottomcontainer);
+				
+			} else {
+				
+				mtexttopcontainer.addView(mtextviewTime);
+				mtexttopcontainer.addView(mtextviewInfo);
+				
+				mtextparentcontainer.addView(mtexttopcontainer);
+			}
+			
+            mcontentview.addView(mtextparentcontainer);
 
         } // onPostExecute
 
