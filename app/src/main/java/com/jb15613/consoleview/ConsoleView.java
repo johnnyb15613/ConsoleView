@@ -435,13 +435,15 @@ public class ConsoleView extends LinearLayout {
 
         @Override
         protected void onPostExecute(ArrayList<String> info) {
-
-            mtextviewL.setTextSize(12);
-            mtextviewR.setTextSize(12);
 			
 			if ((mclassname != null) && (mmethodname != null)) {
-				mtextviewL2.setTextSize(12);
-				mtextviewL3.setTextSize(12);
+				mtextviewL.setTextSize(10);
+				mtextviewR.setTextSize(10);
+				mtextviewL2.setTextSize(8);
+				mtextviewL3.setTextSize(8);
+			} else {
+				mtextviewL.setTextSize(12);
+				mtextviewR.setTextSize(12);
 			}
 
             if (shadowColor != 0) {
