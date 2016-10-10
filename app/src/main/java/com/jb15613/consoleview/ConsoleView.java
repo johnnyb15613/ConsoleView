@@ -47,6 +47,7 @@ public class ConsoleView extends LinearLayout {
     String mTextColor;
     String mBackgroundColor;
     boolean mIsLightTheme;
+	int mTextSize;
 
     public ConsoleView(Context context) {
         this(context, null);
@@ -75,6 +76,7 @@ public class ConsoleView extends LinearLayout {
             mTextColor = ta.getString(R.styleable.ConsoleView_consoleTextColor);
             mBackgroundColor = ta.getString(R.styleable.ConsoleView_consoleBackgroundColor);
             mIsLightTheme = ta.getBoolean(R.styleable.ConsoleView_consoleIsLightTheme, false);
+			mTextSize = ta.getInt(R.styleable.ConsoleView_consoleTextSize, 10);
         } finally {
             ta.recycle();
         }
@@ -249,9 +251,9 @@ public class ConsoleView extends LinearLayout {
 				mtextviewInfo = new TextView(mcontext);
 				
 				mtextviewTime.setLayoutParams(textParams);
-				mtextviewTime.setPadding(8, 4, 0, 4);
+				mtextviewTime.setPadding(8, 4, 4, 4);
 				mtextviewInfo.setLayoutParams(textParams);
-				mtextviewInfo.setPadding(0, 4, 8, 4);
+				mtextviewInfo.setPadding(4, 4, 8, 4);
 				
 			} else {
 				
@@ -269,16 +271,16 @@ public class ConsoleView extends LinearLayout {
 				mtextviewInfo = new TextView(mcontext);
 
 				mtextviewTime.setLayoutParams(textParams);
-				mtextviewTime.setPadding(8, 4, 0, 4);
+				mtextviewTime.setPadding(8, 4, 4, 4);
 
 				mtextviewClass.setLayoutParams(textParams);
-				mtextviewClass.setPadding(0, 4, 0, 4);
+				mtextviewClass.setPadding(4, 4, 0, 4);
 
 				mtextviewMethod.setLayoutParams(textParams);
-				mtextviewMethod.setPadding(0, 4, 0, 4);
+				mtextviewMethod.setPadding(0, 4, 8, 4);
 
 				mtextviewInfo.setLayoutParams(textParams);
-				mtextviewInfo.setPadding(0, 4, 8, 4);
+				mtextviewInfo.setPadding(8, 4, 8, 4);
 				
 			}
 			
@@ -462,15 +464,17 @@ public class ConsoleView extends LinearLayout {
         @Override
         protected void onPostExecute(ArrayList<String> info) {
 			
+			
 			if (mdeeplogging) {
-				mtextviewTime.setTextSize(10);
-				mtextviewInfo.setTextSize(10);
-				mtextviewClass.setTextSize(8);
-				mtextviewMethod.setTextSize(8);
+				mtextviewTime.setTextSize(mTextSize);
+				mtextviewInfo.setTextSize(mTextSize);
+				mtextviewClass.setTextSize(mTextSize);
+				mtextviewMethod.setTextSize(mTextSize);
 			} else {
-				mtextviewTime.setTextSize(10);
-				mtextviewInfo.setTextSize(12);
+				mtextviewTime.setTextSize(mTextSize);
+				mtextviewInfo.setTextSize(mTextSize);
 			}
+			
 
             if (shadowColor != 0) {
                 mtextviewInfo.setShadowLayer(2, 2, 2, shadowColor);

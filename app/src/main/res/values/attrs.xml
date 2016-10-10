@@ -11,5 +11,6 @@
         <attr name="consoleTextColor" format="string"/>
         <attr name="consoleBackgroundColor" format="string"/>
         <attr name="consoleIsLightTheme" format="boolean"/>
+		<attr name="consoleTextSize" format="integer"/>
     </declare-styleable>
 </resources>
