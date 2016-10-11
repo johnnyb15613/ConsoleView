@@ -457,6 +457,7 @@ public class ConsoleView extends LinearLayout {
 			}
 
             return items;
+			
         } // doInBackground
 
         protected void onProgressUpdate(String... progress) {
