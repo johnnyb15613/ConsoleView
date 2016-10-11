@@ -76,7 +76,7 @@ public class ConsoleView extends LinearLayout {
             mTextColor = ta.getString(R.styleable.ConsoleView_consoleTextColor);
             mBackgroundColor = ta.getString(R.styleable.ConsoleView_consoleBackgroundColor);
             mIsLightTheme = ta.getBoolean(R.styleable.ConsoleView_consoleIsLightTheme, false);
-			mTextSize = Integer.parseInt(ta.getString(R.styleable.ConsoleView_consoleTextSize));
+			mTextSize = ta.getInteger(R.styleable.ConsoleView_consoleTextSize, 12);
         } finally {
             ta.recycle();
         }
