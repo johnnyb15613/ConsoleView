@@ -477,6 +477,8 @@ public class ConsoleView extends LinearLayout {
 				mtextviewClass.setLines(1);
 				mtextviewMethod.setLines(1);
 				
+				mtextviewMethod.setSelected(true);
+				
 				mtextviewMethod.setEllipsize(TextUtils.TruncateAt.END);
 				mtextviewMethod.setHorizontallyScrolling(false);
 				mtextviewMethod.setSingleLine();
