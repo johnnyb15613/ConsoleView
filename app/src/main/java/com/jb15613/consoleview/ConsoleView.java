@@ -34,9 +34,10 @@ public class ConsoleView extends LinearLayout {
     private NestedScrollView mScrollView;
     // ScrollView Child
     private LinearLayout mContentView;
-
+	// Context
     public Context mContext;
 
+	/* XML Attributes */
 	String mClassColor;
 	String mMethodColor;
 	String mInfoColor;
@@ -464,17 +465,13 @@ public class ConsoleView extends LinearLayout {
         @Override
         protected void onPostExecute(ArrayList<String> info) {
 			
+			mtextviewTime.setTextSize(mTextSize);
+			mtextviewInfo.setTextSize(mTextSize);
 			
 			if (mdeeplogging) {
-				mtextviewTime.setTextSize(mTextSize);
-				mtextviewInfo.setTextSize(mTextSize);
 				mtextviewClass.setTextSize(mTextSize);
 				mtextviewMethod.setTextSize(mTextSize);
-			} else {
-				mtextviewTime.setTextSize(mTextSize);
-				mtextviewInfo.setTextSize(mTextSize);
 			}
-			
 
             if (shadowColor != 0) {
                 mtextviewInfo.setShadowLayer(2, 2, 2, shadowColor);
