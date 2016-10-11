@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import android.graphics.Color;
+import android.text.TextUtils;
 
 public class ConsoleView extends LinearLayout {
 
@@ -472,6 +473,13 @@ public class ConsoleView extends LinearLayout {
 			if (mdeeplogging) {
 				mtextviewClass.setTextSize(mTextSize);
 				mtextviewMethod.setTextSize(mTextSize);
+				
+				mtextviewClass.setLines(1);
+				mtextviewMethod.setLines(1);
+				
+				mtextviewMethod.setEllipsize(TextUtils.TruncateAt.END);
+				mtextviewMethod.setHorizontallyScrolling(false);
+				mtextviewMethod.setSingleLine();
 			}
 
             if (shadowColor != 0) {
