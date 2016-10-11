@@ -153,7 +153,7 @@ public class ConsoleView extends LinearLayout {
 
     OnClickListener saveLogListener = new OnClickListener() {
         public void onClick(View v) {
-            writeToConsole("d", "Console", "Save Log Button Clicked");
+            writeToConsole("d", "ConsoleView", "saveLogListener", "Console Save Log Button", "Clicked");
         }
     };
 
