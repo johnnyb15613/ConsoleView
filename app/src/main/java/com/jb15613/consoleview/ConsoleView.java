@@ -3,7 +3,6 @@ package com.jb15613.consoleview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
 import android.text.Html;
 import android.util.AttributeSet;
@@ -242,79 +241,79 @@ public class ConsoleView extends LinearLayout {
 
         @Override
         protected ArrayList<String> doInBackground(String... aurl) {
+            return null;
+
+        } // doInBackground
+
+        protected void onProgressUpdate(String... progress) {
+        } // onProgressUpdate
+
+        @Override
+        protected void onPostExecute(ArrayList<String> infos) {
 
             final LinearLayout.LayoutParams containerParams =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
             final LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-            new Handler().post(new Runnable() {
+            mtextparentcontainer = new LinearLayout(mcontext);
+            mtextparentcontainer.setLayoutParams(containerParams);
 
-                @Override
-                public void run() {
+            mtextrightcontainer = new LinearLayout(mcontext);
 
-                    mtextparentcontainer = new LinearLayout(mcontext);
-                    mtextparentcontainer.setLayoutParams(containerParams);
+            mtextrightcontainer.setLayoutParams(containerParams);
+            mtextrightcontainer.setOrientation(LinearLayout.VERTICAL);
 
-                    mtextrightcontainer = new LinearLayout(mcontext);
+            if (!mdeeplogging) {
 
-                    mtextrightcontainer.setLayoutParams(containerParams);
-                    mtextrightcontainer.setOrientation(LinearLayout.VERTICAL);
+                mtextviewTime = new TextView(mcontext);
+                mtextviewInfo = new TextView(mcontext);
 
-                    if (!mdeeplogging) {
+                mtextviewTime.setLayoutParams(textParams);
+                mtextviewTime.setPadding(8, 4, 4, 4);
+                mtextviewInfo.setLayoutParams(textParams);
+                mtextviewInfo.setPadding(4, 4, 8, 4);
 
-                        mtextviewTime = new TextView(mcontext);
-                        mtextviewInfo = new TextView(mcontext);
+            } else {
 
-                        mtextviewTime.setLayoutParams(textParams);
-                        mtextviewTime.setPadding(8, 4, 4, 4);
-                        mtextviewInfo.setLayoutParams(textParams);
-                        mtextviewInfo.setPadding(4, 4, 8, 4);
+                mtextviewTime = new TextView(mcontext);
+                mtextviewClass = new AutofitTextView(mcontext);
+                mtextviewInfo = new TextView(mcontext);
 
-                    } else {
+                mtextviewTime.setLayoutParams(textParams);
+                mtextviewTime.setPadding(8, 4, 4, 4);
 
-                        mtextviewTime = new TextView(mcontext);
-                        mtextviewClass = new AutofitTextView(mcontext);
-                        mtextviewInfo = new TextView(mcontext);
+                mtextviewClass.setLayoutParams(textParams);
+                mtextviewClass.setPadding(4, 4, 8, 4);
 
-                        mtextviewTime.setLayoutParams(textParams);
-                        mtextviewTime.setPadding(8, 4, 4, 4);
+                mtextviewInfo.setLayoutParams(textParams);
+                mtextviewInfo.setPadding(8, 4, 8, 4);
 
-                        mtextviewClass.setLayoutParams(textParams);
-                        mtextviewClass.setPadding(4, 4, 8, 4);
+            }
 
-                        mtextviewInfo.setLayoutParams(textParams);
-                        mtextviewInfo.setPadding(8, 4, 8, 4);
+            if ((mtextcolor != null) && (!mtextcolor.equals(""))) {
 
+                mtextviewInfo.setTextColor(Color.parseColor(mtextcolor));
+
+            } else {
+
+                if (mlighttheme) {
+                    mtextviewTime.setTextColor(0xff404040);
+                    mtextviewInfo.setTextColor(0xff404040);
+
+                    if (mdeeplogging) {
+                        mtextviewClass.setTextColor(0xff404040);
                     }
 
-                    if ((mtextcolor != null) && (!mtextcolor.equals(""))) {
+                } else {
+                    mtextviewTime.setTextColor(0xffffffff);
+                    mtextviewInfo.setTextColor(0xffffffff);
 
-                        mtextviewInfo.setTextColor(Color.parseColor(mtextcolor));
-
-                    } else {
-
-                        if (mlighttheme) {
-                            mtextviewTime.setTextColor(0xff404040);
-                            mtextviewInfo.setTextColor(0xff404040);
-
-                            if (mdeeplogging) {
-                                mtextviewClass.setTextColor(0xff404040);
-                            }
-
-                        } else {
-                            mtextviewTime.setTextColor(0xffffffff);
-                            mtextviewInfo.setTextColor(0xffffffff);
-
-                            if (mdeeplogging) {
-                                mtextviewClass.setTextColor(0xffffffff);
-                            }
-
-                        }
-
+                    if (mdeeplogging) {
+                        mtextviewClass.setTextColor(0xffffffff);
                     }
 
                 }
 
-            });
+            }
 
             String levelColor = "";
             String classColor = "";
@@ -469,21 +468,11 @@ public class ConsoleView extends LinearLayout {
                 items.add("<font color='" +  methodColor + "'>" + mmethodname + "</font>");
             }
 
-            return items;
-
-        } // doInBackground
-
-        protected void onProgressUpdate(String... progress) {
-        } // onProgressUpdate
-
-        @Override
-        protected void onPostExecute(ArrayList<String> info) {
-
             mtextviewTime.setTextSize(mTextSize);
             mtextviewInfo.setTextSize(mTextSize);
 
-            mtextviewTime.setText(Html.fromHtml(info.get(0)), TextView.BufferType.SPANNABLE);
-            mtextviewInfo.setText(info.get(1));
+            mtextviewTime.setText(Html.fromHtml(items.get(0)), TextView.BufferType.SPANNABLE);
+            mtextviewInfo.setText(items.get(1));
 
             if (shadowColor != 0) {
                 mtextviewInfo.setShadowLayer(2, 2, 2, shadowColor);
@@ -493,7 +482,7 @@ public class ConsoleView extends LinearLayout {
 
                 mtextviewClass.setTextSize(mTextSize);
                 mtextviewClass.setLines(1);
-                String classMethod = info.get(2) + info.get(3);
+                String classMethod = items.get(2) + items.get(3);
 
                 mtextviewClass.setText(Html.fromHtml(classMethod), TextView.BufferType.SPANNABLE);
 
