@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="ConsoleView">
+        <attr name="classLogColor" format="string"/>
+        <attr name="methodLogColor" format="string"/>
+        <attr name="infoLogColor" format="string"/>
         <attr name="debugLogColor" format="string"/>
         <attr name="verboseLogColor" format="string"/>
         <attr name="warningLogColor" format="string"/>
@@ -8,5 +11,6 @@
         <attr name="consoleTextColor" format="string"/>
         <attr name="consoleBackgroundColor" format="string"/>
         <attr name="consoleIsLightTheme" format="boolean"/>
+        <attr name="consoleTextSize" format="integer"/>
     </declare-styleable>
 </resources>
