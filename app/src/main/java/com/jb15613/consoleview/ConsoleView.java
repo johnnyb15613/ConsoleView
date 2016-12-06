@@ -3,6 +3,7 @@ package com.jb15613.consoleview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
 import android.text.Html;
 import android.util.AttributeSet;
@@ -17,7 +18,8 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import android.graphics.Color;
-import android.text.TextUtils;
+
+import me.grantland.widget.AutofitTextView;
 
 public class ConsoleView extends LinearLayout {
 
@@ -154,7 +156,7 @@ public class ConsoleView extends LinearLayout {
 
     OnClickListener saveLogListener = new OnClickListener() {
         public void onClick(View v) {
-            writeToConsole("d", "ConsoleView", "saveLogListener", "Console Save Log Button", "Clicked");
+            writeToConsole("d", "ConsoleView", "saveLogListener()", "Save Log Button", "Clicked - Implementation coming soon!!!");
         }
     };
 
@@ -180,15 +182,20 @@ public class ConsoleView extends LinearLayout {
         String mkey;
         String mmessage;
 
+        // parent passed in constructor
         LinearLayout mcontentview;
+        // layout to put all views into (H)
         LinearLayout mtextparentcontainer;
-        LinearLayout mtexttopcontainer;
-        LinearLayout mtextbottomcontainer;
+        // layout on right side wc-wc (V)
+        LinearLayout mtextrightcontainer;
 
+        // text view for both brands of logs
         TextView mtextviewTime;
-        TextView mtextviewClass;
-        TextView mtextviewMethod;
         TextView mtextviewInfo;
+
+        // text view for class and method name
+        TextView mtextviewClass;
+
 
         boolean mlighttheme;
         boolean mdeeplogging;
@@ -236,83 +243,78 @@ public class ConsoleView extends LinearLayout {
         @Override
         protected ArrayList<String> doInBackground(String... aurl) {
 
-            LinearLayout.LayoutParams containerParams =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-            LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            final LinearLayout.LayoutParams containerParams =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+            final LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-            mtextparentcontainer = new LinearLayout(mcontext);
-            mtextparentcontainer.setLayoutParams(containerParams);
-            mtextparentcontainer.setOrientation(LinearLayout.VERTICAL);
+            new Handler().post(new Runnable() {
 
-            if (!mdeeplogging) {
+                @Override
+                public void run() {
 
-                mtexttopcontainer = new LinearLayout(mcontext);
-                mtexttopcontainer.setLayoutParams(containerParams);
-                mtexttopcontainer.setOrientation(LinearLayout.HORIZONTAL);
+                    mtextparentcontainer = new LinearLayout(mcontext);
+                    mtextparentcontainer.setLayoutParams(containerParams);
 
-                mtextviewTime = new TextView(mcontext);
-                mtextviewInfo = new TextView(mcontext);
+                    mtextrightcontainer = new LinearLayout(mcontext);
 
-                mtextviewTime.setLayoutParams(textParams);
-                mtextviewTime.setPadding(8, 4, 4, 4);
-                mtextviewInfo.setLayoutParams(textParams);
-                mtextviewInfo.setPadding(4, 4, 8, 4);
+                    mtextrightcontainer.setLayoutParams(containerParams);
+                    mtextrightcontainer.setOrientation(LinearLayout.VERTICAL);
 
-            } else {
+                    if (!mdeeplogging) {
 
-                mtexttopcontainer = new LinearLayout(mcontext);
-                mtexttopcontainer.setLayoutParams(containerParams);
-                mtexttopcontainer.setOrientation(LinearLayout.HORIZONTAL);
+                        mtextviewTime = new TextView(mcontext);
+                        mtextviewInfo = new TextView(mcontext);
 
-                mtextbottomcontainer = new LinearLayout(mcontext);
-                mtextbottomcontainer.setLayoutParams(containerParams);
-                mtextbottomcontainer.setOrientation(LinearLayout.HORIZONTAL);
+                        mtextviewTime.setLayoutParams(textParams);
+                        mtextviewTime.setPadding(8, 4, 4, 4);
+                        mtextviewInfo.setLayoutParams(textParams);
+                        mtextviewInfo.setPadding(4, 4, 8, 4);
 
-                mtextviewTime = new TextView(mcontext);
-                mtextviewClass = new TextView(mcontext);
-                mtextviewMethod = new TextView(mcontext);
-                mtextviewInfo = new TextView(mcontext);
+                    } else {
 
-                mtextviewTime.setLayoutParams(textParams);
-                mtextviewTime.setPadding(8, 4, 4, 4);
+                        mtextviewTime = new TextView(mcontext);
+                        mtextviewClass = new AutofitTextView(mcontext);
+                        mtextviewInfo = new TextView(mcontext);
 
-                mtextviewClass.setLayoutParams(textParams);
-                mtextviewClass.setPadding(4, 4, 0, 4);
+                        mtextviewTime.setLayoutParams(textParams);
+                        mtextviewTime.setPadding(8, 4, 4, 4);
 
-                mtextviewMethod.setLayoutParams(textParams);
-                mtextviewMethod.setPadding(0, 4, 8, 4);
+                        mtextviewClass.setLayoutParams(textParams);
+                        mtextviewClass.setPadding(4, 4, 8, 4);
 
-                mtextviewInfo.setLayoutParams(textParams);
-                mtextviewInfo.setPadding(8, 4, 8, 4);
+                        mtextviewInfo.setLayoutParams(textParams);
+                        mtextviewInfo.setPadding(8, 4, 8, 4);
 
-            }
-
-            if ((mtextcolor != null) && (!mtextcolor.equals(""))) {
-
-                mtextviewInfo.setTextColor(Color.parseColor(mtextcolor));
-
-            } else {
-
-                if (mlighttheme) {
-                    mtextviewTime.setTextColor(0xff404040);
-                    mtextviewInfo.setTextColor(0xff404040);
-
-                    if (mdeeplogging) {
-                        mtextviewClass.setTextColor(0xff404040);
-                        mtextviewMethod.setTextColor(0xff404040);
                     }
 
-                } else {
-                    mtextviewTime.setTextColor(0xffffffff);
-                    mtextviewInfo.setTextColor(0xffffffff);
+                    if ((mtextcolor != null) && (!mtextcolor.equals(""))) {
 
-                    if (mdeeplogging) {
-                        mtextviewClass.setTextColor(0xffffffff);
-                        mtextviewMethod.setTextColor(0xffffffff);
+                        mtextviewInfo.setTextColor(Color.parseColor(mtextcolor));
+
+                    } else {
+
+                        if (mlighttheme) {
+                            mtextviewTime.setTextColor(0xff404040);
+                            mtextviewInfo.setTextColor(0xff404040);
+
+                            if (mdeeplogging) {
+                                mtextviewClass.setTextColor(0xff404040);
+                            }
+
+                        } else {
+                            mtextviewTime.setTextColor(0xffffffff);
+                            mtextviewInfo.setTextColor(0xffffffff);
+
+                            if (mdeeplogging) {
+                                mtextviewClass.setTextColor(0xffffffff);
+                            }
+
+                        }
+
                     }
 
                 }
 
-            }
+            });
 
             String levelColor = "";
             String classColor = "";
@@ -334,7 +336,9 @@ public class ConsoleView extends LinearLayout {
                         }
 
                     } else {
-                        levelColor = "#0000ff";
+                        levelColor = "#00cc00";
+                        String newColor = "#ff" + levelColor.substring(1);
+                        shadowColor = Color.parseColor(newColor);
                     }
 
                     break;
@@ -353,7 +357,9 @@ public class ConsoleView extends LinearLayout {
                             shadowColor = Color.parseColor(newColor);
                         }
                     } else {
-                        levelColor = "#00ff00";
+                        levelColor = "#00e7ff";
+                        String newColor = "#ff" + levelColor.substring(1);
+                        shadowColor = Color.parseColor(newColor);
                     }
 
                     break;
@@ -372,7 +378,9 @@ public class ConsoleView extends LinearLayout {
                             shadowColor = Color.parseColor(newColor);
                         }
                     } else {
-                        levelColor = "#ffff00";
+                        levelColor = "#ff7100";
+                        String newColor = "#ff" + levelColor.substring(1);
+                        shadowColor = Color.parseColor(newColor);
                     }
 
                     break;
@@ -392,6 +400,8 @@ public class ConsoleView extends LinearLayout {
                         }
                     } else {
                         levelColor = "#ff0000";
+                        String newColor = "#ff" + levelColor.substring(1);
+                        shadowColor = Color.parseColor(newColor);
                     }
 
                     break;
@@ -410,7 +420,9 @@ public class ConsoleView extends LinearLayout {
                             shadowColor = Color.parseColor(newColor);
                         }
                     } else {
-                        levelColor = "#aaaaaa";
+                        levelColor = "#d500ff";
+                        String newColor = "#ff" + levelColor.substring(1);
+                        shadowColor = Color.parseColor(newColor);
                     }
 
                     break;
@@ -426,7 +438,7 @@ public class ConsoleView extends LinearLayout {
                     classColor = mClassColor;
                 }
             } else {
-                classColor = "#0060ff";
+                classColor = "#0080ff";
             }
 
             if (mMethodColor != null) {
@@ -438,7 +450,7 @@ public class ConsoleView extends LinearLayout {
                     methodColor = mMethodColor;
                 }
             } else {
-                methodColor = "#ff6000";
+                methodColor = "#ff00c3";
             }
 
             // Get the time
@@ -453,8 +465,8 @@ public class ConsoleView extends LinearLayout {
             items.add(mkey + " - " + mmessage);
 
             if (mdeeplogging) {
-                items.add("<font color='" +  classColor + "'> " + mclassname + ".</font>");
-                items.add("<font color='" +  methodColor + "'> " + mmethodname + "</font>");
+                items.add("<font color='" +  classColor + "'>" + mclassname + ".</font>");
+                items.add("<font color='" +  methodColor + "'>" + mmethodname + "</font>");
             }
 
             return items;
@@ -470,49 +482,33 @@ public class ConsoleView extends LinearLayout {
             mtextviewTime.setTextSize(mTextSize);
             mtextviewInfo.setTextSize(mTextSize);
 
-            if (mdeeplogging) {
-                mtextviewClass.setTextSize(mTextSize);
-                mtextviewMethod.setTextSize(mTextSize);
-
-                mtextviewClass.setLines(1);
-                mtextviewMethod.setLines(1);
-
-                mtextviewMethod.setSelected(true);
-
-                mtextviewMethod.setEllipsize(TextUtils.TruncateAt.END);
-                mtextviewMethod.setHorizontallyScrolling(false);
-                mtextviewMethod.setSingleLine();
-            }
+            mtextviewTime.setText(Html.fromHtml(info.get(0)), TextView.BufferType.SPANNABLE);
+            mtextviewInfo.setText(info.get(1));
 
             if (shadowColor != 0) {
                 mtextviewInfo.setShadowLayer(2, 2, 2, shadowColor);
             }
-            mtextviewTime.setText(Html.fromHtml(info.get(0)), TextView.BufferType.SPANNABLE);
-            mtextviewInfo.setText(info.get(1));
-
-            if (mdeeplogging) {
-                mtextviewClass.setText(Html.fromHtml(info.get(2)), TextView.BufferType.SPANNABLE);
-                mtextviewMethod.setText(Html.fromHtml(info.get(3)), TextView.BufferType.SPANNABLE);
-            }
 
             if (mdeeplogging) {
 
-                mtexttopcontainer.addView(mtextviewTime);
-                mtexttopcontainer.addView(mtextviewClass);
-                mtexttopcontainer.addView(mtextviewMethod);
+                mtextviewClass.setTextSize(mTextSize);
+                mtextviewClass.setLines(1);
+                String classMethod = info.get(2) + info.get(3);
 
-                mtextparentcontainer.addView(mtexttopcontainer);
+                mtextviewClass.setText(Html.fromHtml(classMethod), TextView.BufferType.SPANNABLE);
 
-                mtextbottomcontainer.addView(mtextviewInfo);
+                mtextparentcontainer.addView(mtextviewTime);
 
-                mtextparentcontainer.addView(mtextbottomcontainer);
+                mtextrightcontainer.addView(mtextviewClass);
+                mtextrightcontainer.addView(mtextviewInfo);
+
+                mtextparentcontainer.addView(mtextrightcontainer);
 
             } else {
+                mtextparentcontainer.addView(mtextviewTime);
+                mtextrightcontainer.addView(mtextviewInfo);
 
-                mtexttopcontainer.addView(mtextviewTime);
-                mtexttopcontainer.addView(mtextviewInfo);
-
-                mtextparentcontainer.addView(mtexttopcontainer);
+                mtextparentcontainer.addView(mtextrightcontainer);
             }
 
             mcontentview.addView(mtextparentcontainer);
