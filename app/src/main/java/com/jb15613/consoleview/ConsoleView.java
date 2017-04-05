@@ -592,6 +592,12 @@ public class ConsoleView extends LinearLayout {
                 mtextparentcontainer.addView(mtextrightcontainer);
             }
 
+            mtextviewTime.setFreezesText(true);
+            mtextviewInfo.setFreezesText(true);
+            if (mdeeplogging) {
+                mtextviewClass.setFreezesText(true);
+            }
+
             mcontentview.addView(mtextparentcontainer);
 
         } // onPostExecute
