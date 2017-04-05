@@ -411,7 +411,7 @@ public class ConsoleView extends LinearLayout {
             String classColor;
             String methodColor;
 
-            switch (mloglevel) {
+            switch (mloglevel.toLowerCase()) {
                 case "d":
 
                     if (mDebugColor != null) {
