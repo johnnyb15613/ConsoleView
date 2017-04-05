@@ -3,11 +3,11 @@ package com.jb15613.consoleview;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Utilities {
+class Utilities {
 
     private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
 
-    public static int generateViewId() {
+    static int generateViewId() {
         for (;;) {
             final int result = sNextGeneratedId.get();
             // aapt-generated IDs have the high byte nonzero; clamp to the range under that.

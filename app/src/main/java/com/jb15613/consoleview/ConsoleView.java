@@ -26,9 +26,6 @@ import me.grantland.widget.AutofitTextView;
 
 public class ConsoleView extends LinearLayout {
 
-    // Parent View (vertical)
-    private LinearLayout mContainer;
-
     // Buttons Layout (horizontal)
     LinearLayout mButtonContainer;
     // Clear Button
@@ -36,8 +33,6 @@ public class ConsoleView extends LinearLayout {
     // Save Button
     Button mSaveLogButton;
 
-    // ScrollView
-    private NestedScrollView mScrollView;
     // ScrollView Child
     private LinearLayout mContentView;
     // Context
@@ -90,7 +85,7 @@ public class ConsoleView extends LinearLayout {
             ta.recycle();
         }
 
-        mContainer = new LinearLayout(mContext);
+        LinearLayout mContainer = new LinearLayout(mContext);
         LinearLayout.LayoutParams containerParams =new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         mContainer.setLayoutParams(containerParams);
         mContainer.setOrientation(LinearLayout.VERTICAL);
@@ -121,7 +116,7 @@ public class ConsoleView extends LinearLayout {
         mClearLogButton.setOnClickListener(clearLogListener);
         mSaveLogButton.setOnClickListener(saveLogListener);
 
-        mScrollView = new NestedScrollView(mContext);
+        NestedScrollView mScrollView = new NestedScrollView(mContext);
         NestedScrollView.LayoutParams scrollParams = new NestedScrollView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         mScrollView.setLayoutParams(scrollParams);
         setViewId(mScrollView);
@@ -156,8 +151,6 @@ public class ConsoleView extends LinearLayout {
         }
 
         this.addView(mContainer);
-        setViewId(this);
-
     }
 
     OnClickListener clearLogListener = new OnClickListener() {
@@ -181,7 +174,7 @@ public class ConsoleView extends LinearLayout {
     }
 
     public void saveConsole() {
-        new SaveLogToFile(mContext, mContentView, mDeepLogging).execute();
+        new SaveLogToFile(mContentView, mDeepLogging).execute();
     }
 
     public void clearConsole() {
@@ -415,8 +408,8 @@ public class ConsoleView extends LinearLayout {
             }
 
             String levelColor = "";
-            String classColor = "";
-            String methodColor = "";
+            String classColor;
+            String methodColor;
 
             switch (mloglevel) {
                 case "d":

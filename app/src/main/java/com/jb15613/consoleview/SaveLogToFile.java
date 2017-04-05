@@ -1,6 +1,5 @@
 package com.jb15613.consoleview;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
@@ -15,24 +14,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class SaveLogToFile extends AsyncTask<String, String, String> {
+class SaveLogToFile extends AsyncTask<String, String, String> {
 
-    Context mContext;
-    LinearLayout mContentView;
-    Boolean mDeepLogging;
+    private LinearLayout mContentView;
+    private Boolean mDeepLogging;
 
-    int children = 0;
+    private String writable = "";
 
-    TextView mInfoTv;
-    TextView mClassTv;
-    TextView mTimeTv;
-
-    String writable = "";
-
-    Boolean success;
-
-    SaveLogToFile(Context context, LinearLayout contentView, Boolean deepLogging) {
-        mContext = context;
+    SaveLogToFile(LinearLayout contentView, Boolean deepLogging) {
         mContentView = contentView;
         mDeepLogging = deepLogging;
     } // constructor
@@ -41,11 +30,11 @@ public class SaveLogToFile extends AsyncTask<String, String, String> {
     protected void onPreExecute() {
         super.onPreExecute();
 
-        children = mContentView.getChildCount();
+        int children = mContentView.getChildCount();
 
-        String time;
-        String info;
-        String callingClass;
+        TextView mInfoTv;
+        TextView mClassTv;
+        TextView mTimeTv;
 
         for (int i = 0; i < children; i++) {
             mTimeTv = (TextView) mContentView.getChildAt(i).findViewWithTag("textViewTime");
@@ -73,7 +62,9 @@ public class SaveLogToFile extends AsyncTask<String, String, String> {
 
         // Make sure the path directory exists.
         if(!logDir.exists()) {
-            logDir.mkdirs();
+            if(!logDir.mkdirs()) {
+                return null;
+            }
         }
 
         // Get the time
@@ -86,27 +77,28 @@ public class SaveLogToFile extends AsyncTask<String, String, String> {
 
         try
         {
-            log.createNewFile();
-            FileOutputStream fOut = new FileOutputStream(log);
-            OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+            if(log.createNewFile()) {
+                FileOutputStream fOut = new FileOutputStream(log);
+                OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
 
-            if (writable.contains("/n")) {
+                if (writable.contains("/n")) {
 
-                String[] items = writable.split("/n");
+                    String[] items = writable.split("/n");
 
-                for (int i = 0; i < items.length; i++) {
-                    myOutWriter.append(items[i]);
-                    myOutWriter.append(System.getProperty("line.separator"));
+                    for(String i : items) {
+                        myOutWriter.append(i);
+                        myOutWriter.append(System.getProperty("line.separator"));
+                    }
+
+                } else {
+                    myOutWriter.append(writable);
                 }
 
-            } else {
-                myOutWriter.append(writable);
+                myOutWriter.close();
+
+                fOut.flush();
+                fOut.close();
             }
-
-            myOutWriter.close();
-
-            fOut.flush();
-            fOut.close();
 
         } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
