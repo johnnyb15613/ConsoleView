@@ -157,8 +157,6 @@ public class ConsoleView extends LinearLayout {
 
         this.addView(mContainer);
 
-        setSaveEnabled(true);
-
     }
 
     OnClickListener clearLogListener = new OnClickListener() {
