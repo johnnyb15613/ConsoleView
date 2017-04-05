@@ -157,8 +157,7 @@ public class ConsoleView extends LinearLayout {
 
     OnClickListener saveLogListener = new OnClickListener() {
         public void onClick(View v) {
-            writeToConsole("d", "ConsoleView", "saveLogListener()", "Save Log", "Trying to save now...");
-            new SaveLogToFile(mContext, mContentView, mDeepLogging).execute();
+            saveConsole();
         }
     };
 
@@ -168,6 +167,10 @@ public class ConsoleView extends LinearLayout {
 
     public void writeToConsole(String logLevel, String className, String methodName, String key, String message) {
         new WriteToConsoleLog(mContext, logLevel, className, methodName, key, message, mContentView, mIsLightTheme, mTextColor).execute();
+    }
+
+    public void saveConsole() {
+        new SaveLogToFile(mContext, mContentView, mDeepLogging).execute();
     }
 
     public void clearConsole() {

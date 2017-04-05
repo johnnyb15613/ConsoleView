@@ -24,7 +24,7 @@ public class SaveLogToFile extends AsyncTask<String, String, String> {
     TextView mClassTv;
     TextView mTimeTv;
 
-    String writable;
+    String writable = "";
 
     SaveLogToFile(Context context, LinearLayout contentView, Boolean deepLogging) {
         mContext = context;
@@ -78,7 +78,19 @@ public class SaveLogToFile extends AsyncTask<String, String, String> {
             log.createNewFile();
             FileOutputStream fOut = new FileOutputStream(log);
             OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-            myOutWriter.append(writable);
+
+            if (writable.contains("/n")) {
+
+                String[] items = writable.split("/n");
+
+                for (int i = 0; i < items.length; i++) {
+                    myOutWriter.append(items[i]);
+                    myOutWriter.append(System.getProperty("line.separator"));
+                }
+
+            } else {
+                myOutWriter.append(writable);
+            }
 
             myOutWriter.close();
 
