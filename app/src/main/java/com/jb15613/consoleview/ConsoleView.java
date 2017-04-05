@@ -2,6 +2,7 @@ package com.jb15613.consoleview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.widget.NestedScrollView;
 import android.text.Html;
@@ -11,12 +12,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
-
-import android.graphics.Color;
 
 import me.grantland.widget.AutofitTextView;
 
@@ -38,6 +38,8 @@ public class ConsoleView extends LinearLayout {
     private LinearLayout mContentView;
     // Context
     public Context mContext;
+    // Logging level
+    Boolean mDeepLogging = false;
 
     /* XML Attributes */
     String mClassColor;
@@ -155,7 +157,8 @@ public class ConsoleView extends LinearLayout {
 
     OnClickListener saveLogListener = new OnClickListener() {
         public void onClick(View v) {
-            writeToConsole("d", "ConsoleView", "saveLogListener()", "Save Log Button", "Clicked - Implementation coming soon!!!");
+            writeToConsole("d", "ConsoleView", "saveLogListener()", "Save Log", "Trying to save now...");
+            new SaveLogToFile(mContext, mContentView, mDeepLogging).execute();
         }
     };
 
@@ -231,16 +234,19 @@ public class ConsoleView extends LinearLayout {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            if ((mclassname == null) && (mmethodname == null)) {
-                mdeeplogging = false;
-            } else {
-                mdeeplogging = true;
-            }
-
         } // onPreExecute
 
         @Override
         protected ArrayList<String> doInBackground(String... aurl) {
+
+            if ((mclassname == null) && (mmethodname == null)) {
+                mdeeplogging = false;
+                mDeepLogging = false;
+            } else {
+                mdeeplogging = true;
+                mDeepLogging = true;
+            }
+
             return null;
 
         } // doInBackground
@@ -267,6 +273,9 @@ public class ConsoleView extends LinearLayout {
                 mtextviewTime = new TextView(mcontext);
                 mtextviewInfo = new TextView(mcontext);
 
+                mtextviewTime.setTag("textViewTime");
+                mtextviewInfo.setTag("textViewInfo");
+
                 mtextviewTime.setLayoutParams(textParams);
                 mtextviewTime.setPadding(8, 4, 4, 4);
                 mtextviewInfo.setLayoutParams(textParams);
@@ -277,6 +286,10 @@ public class ConsoleView extends LinearLayout {
                 mtextviewTime = new TextView(mcontext);
                 mtextviewClass = new AutofitTextView(mcontext);
                 mtextviewInfo = new TextView(mcontext);
+
+                mtextviewTime.setTag("textViewTime");
+                mtextviewClass.setTag("textViewClass");
+                mtextviewInfo.setTag("textViewInfo");
 
                 mtextviewTime.setLayoutParams(textParams);
                 mtextviewTime.setPadding(8, 4, 4, 4);
