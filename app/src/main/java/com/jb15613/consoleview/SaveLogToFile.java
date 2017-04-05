@@ -11,6 +11,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class SaveLogToFile extends AsyncTask<String, String, String> {
 
@@ -73,7 +76,13 @@ public class SaveLogToFile extends AsyncTask<String, String, String> {
             logDir.mkdirs();
         }
 
-        final File log = new File(logDir, "consoleLog.txt");
+        // Get the time
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("h:mm:ss a", Locale.US);
+
+        String time = sdf.format(c.getTime());
+
+        final File log = new File(logDir, "consoleLog " + time + ".txt");
 
         try
         {
