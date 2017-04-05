@@ -26,6 +26,8 @@ public class SaveLogToFile extends AsyncTask<String, String, String> {
 
     String writable = "";
 
+    Boolean success;
+
     SaveLogToFile(Context context, LinearLayout contentView, Boolean deepLogging) {
         mContext = context;
         mContentView = contentView;
@@ -96,9 +98,8 @@ public class SaveLogToFile extends AsyncTask<String, String, String> {
 
             fOut.flush();
             fOut.close();
-        }
-        catch (IOException e)
-        {
+
+        } catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
 
@@ -111,7 +112,6 @@ public class SaveLogToFile extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String info) {
-
     } // onPostExecute
 
 } // Class
