@@ -156,6 +156,7 @@ public class ConsoleView extends LinearLayout {
         }
 
         this.addView(mContainer);
+        setViewId(this);
 
     }
 
