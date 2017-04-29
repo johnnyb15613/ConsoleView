@@ -563,11 +563,12 @@ public class ConsoleView extends LinearLayout {
             if (mdeeplogging) {
 				if (!mmethodname.equals("")) {
 					items.add("<font color='" +  classColor + "'>" + mclassname + ".</font>");
+					items.add("<font color='" +  methodColor + "'>" + mmethodname + "</font>");
 				} else {
 					items.add("<font color='" +  classColor + "'>" + mclassname + "</font>");
+					items.add("");
 				}
                 
-                items.add("<font color='" +  methodColor + "'>" + mmethodname + "</font>");
             }
 
             mtextviewTime.setTextSize(mTextSize);
