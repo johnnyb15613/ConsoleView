@@ -553,10 +553,20 @@ public class ConsoleView extends LinearLayout {
             ArrayList<String> items = new ArrayList<>();
             items.add("<font color='" +  levelColor + "'> " + mloglevel.toUpperCase() + ": " + time + "</font>");
 
-            items.add(mkey + " - " + mmessage);
+			if (!mkey.equals("")) {
+				items.add(mkey + " - " + mmessage);
+			} else {
+				items.add(mmessage);
+			}
+            
 
             if (mdeeplogging) {
-                items.add("<font color='" +  classColor + "'>" + mclassname + ".</font>");
+				if (!mmethodname.equals("")) {
+					items.add("<font color='" +  classColor + "'>" + mclassname + ".</font>");
+				} else {
+					items.add("<font color='" +  classColor + "'>" + mclassname + "</font>");
+				}
+                
                 items.add("<font color='" +  methodColor + "'>" + mmethodname + "</font>");
             }
 
