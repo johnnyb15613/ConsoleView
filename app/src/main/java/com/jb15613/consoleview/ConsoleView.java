@@ -34,11 +34,11 @@ public class ConsoleView extends LinearLayout {
     Button mSaveLogButton;
 
     // ScrollView Child
-    private LinearLayout mContentView;
+    static private LinearLayout mContentView;
     // Context
     public Context mContext;
     // Logging level
-    Boolean mDeepLogging = false;
+    static Boolean mDeepLogging = false;
 
     /* XML Attributes */
     String mClassColor;
@@ -181,6 +181,10 @@ public class ConsoleView extends LinearLayout {
         mContentView.removeAllViews();
     }
 
+	public static void saveLog() {
+		new SaveLogToFile(mContentView, mDeepLogging).execute();
+	}
+	
     @Override
     public Parcelable onSaveInstanceState() {
         Parcelable superState = super.onSaveInstanceState();
