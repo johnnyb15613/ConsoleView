@@ -44,7 +44,10 @@ class SaveLogToFile extends AsyncTask<String, String, String> {
             if (mDeepLogging) {
                 mClassTv = (TextView) mContentView.getChildAt(i).findViewWithTag("textViewClass");
 
-                writable += mClassTv.getText().toString() + " - ";
+				if (mClassTv != null) {
+					writable += mClassTv.getText().toString() + " - ";
+				}
+                
             }
 
             mInfoTv = (TextView) mContentView.getChildAt(i).findViewWithTag("textViewInfo");
